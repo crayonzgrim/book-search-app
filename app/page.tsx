@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { BookLists, SearchInputField } from '@/components';
+import { BookLists, LoadContinue, SearchInputField } from '@/components';
 import { BooksByQuery } from '@/types';
 
 export default function Home() {
@@ -25,7 +25,10 @@ export default function Home() {
         {!booksByQuery || +booksByQuery?.total === 0 ? (
           <div className="w-full h-full">Try to search books!</div>
         ) : (
-          <BookLists bookInfo={booksByQuery.books} />
+          <>
+            <BookLists bookInfo={booksByQuery.books} />
+            <LoadContinue query={searchQuery} />
+          </>
         )}
       </div>
     </main>
