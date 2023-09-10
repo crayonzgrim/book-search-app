@@ -11,7 +11,7 @@ export interface BookListsProps {
 }
 
 export const BookLists = ({ bookInfo }: BookListsProps) => {
-  return bookInfo.map((book, index) => {
+  return bookInfo.map((book) => {
     const { title, subtitle, image, url, isbn13 } = book;
 
     const uuid = crypto.randomUUID();

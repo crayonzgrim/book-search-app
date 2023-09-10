@@ -23,7 +23,9 @@ export default function Home() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {!booksByQuery || +booksByQuery?.total === 0 ? (
-          <div className="w-full h-full">Try to search books!</div>
+          <div className="w-full min-h-screen flex justify-center items-center p-4 col-span-1 sm:col-span-2 md:col-span-3 border-2 rounded-xl">
+            Try to search books!
+          </div>
         ) : (
           <>
             <BookLists bookInfo={booksByQuery.books} />

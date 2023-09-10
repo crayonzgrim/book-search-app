@@ -19,6 +19,7 @@ export const LoadContinue = ({ query }: LoadContinueProps) => {
 
   const [books, setBooks] = useState<BooksInfo[]>([]);
   const [pagesLoaded, setPagesLoaded] = useState(1);
+  const [currentQuery, setCurrentQuery] = useState('');
 
   const [isKeepFetch, setIsKeepFetch] = useState<boolean | undefined>(
     undefined
@@ -29,8 +30,11 @@ export const LoadContinue = ({ query }: LoadContinueProps) => {
     const nextPage = pagesLoaded + 1;
     const newProducts = await fetchBooksByQuery(query, nextPage);
 
-    if (newProducts?.books) {
-      if (newProducts?.books?.length > 0) {
+    if (currentQuery !== query) {
+      setCurrentQuery(query);
+      setBooks([]);
+    } else {
+      if (newProducts?.books && newProducts?.books?.length > 0) {
         setIsKeepFetch(true);
 
         setBooks((prev: BooksInfo[]) => [...prev, ...newProducts?.books]);
@@ -39,13 +43,14 @@ export const LoadContinue = ({ query }: LoadContinueProps) => {
         setIsKeepFetch(false);
       }
     }
-  }, [query, pagesLoaded, isKeepFetch]);
+  }, [query, pagesLoaded, currentQuery]);
 
   useEffect(() => {
-    if (inView) {
+    console.log(inView || currentQuery !== query);
+    if (inView || currentQuery !== query) {
       handleLoadMore();
     }
-  }, [inView]);
+  }, [inView, currentQuery, query]);
 
   /** Render */
   return (

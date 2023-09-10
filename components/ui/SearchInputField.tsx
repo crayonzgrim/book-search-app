@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { BooksByQuery } from '@/types';
 import { fetchBooksByQuery } from '@/actions';
@@ -8,12 +8,14 @@ import { fetchBooksByQuery } from '@/actions';
 interface SearchInputProps {
   query: string;
   handleSearchQuery: (query: string) => void;
-  handleFetchedBooks: (booksByQuery: BooksByQuery) => void;
+  handleFetchedBooks: (booksByQuery: BooksByQuery | undefined) => void;
 }
 
 export const SearchInputField = (props: SearchInputProps) => {
   /** Property */
   const { query, handleSearchQuery, handleFetchedBooks } = props;
+
+  const [currentQuery, setCurrentQuery] = useState('');
 
   /** Function */
   const handleSubmit = useCallback(
@@ -22,11 +24,14 @@ export const SearchInputField = (props: SearchInputProps) => {
 
       const data = await fetchBooksByQuery(query);
 
-      if (data) {
-        handleFetchedBooks(data);
+      if (currentQuery !== query) {
+        setCurrentQuery(query);
+        handleFetchedBooks(undefined);
       }
+
+      handleFetchedBooks(data);
     },
-    [query]
+    [query, currentQuery]
   );
 
   /** Render */
