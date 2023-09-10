@@ -1,5 +1,19 @@
-import Image from "next/image";
+'use client';
+
+import { SearchInputField } from '@/components';
+import React, { useState } from 'react';
 
 export default function Home() {
-  return <main className="">Hello world</main>;
+  /** Property */
+  const [searchQuery, setSearchQuery] = useState('');
+
+  /** Render */
+  return (
+    <main className="container mx-auto p-4 min-h-screen max-w-5xl">
+      <SearchInputField
+        query={searchQuery}
+        handleSearchQuery={setSearchQuery}
+      />
+    </main>
+  );
 }
