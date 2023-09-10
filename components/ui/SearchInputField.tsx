@@ -33,7 +33,7 @@ export const SearchInputField = (props: SearchInputProps) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex justify-between align-center max-w-6xl mx-auto mt-6"
+      className="flex justify-between align-center max-w-6xl mx-auto mt-6 mb-6"
     >
       <input
         type="text"

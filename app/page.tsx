@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { SearchInputField } from '@/components';
+import { BookLists, SearchInputField } from '@/components';
 import { BooksByQuery } from '@/types';
 
 export default function Home() {
@@ -20,6 +20,14 @@ export default function Home() {
         handleSearchQuery={setSearchQuery}
         handleFetchedBooks={setBooksByQuery}
       />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {!booksByQuery || +booksByQuery?.total === 0 ? (
+          <div className="w-full h-full">Try to search books!</div>
+        ) : (
+          <BookLists bookInfo={booksByQuery.books} />
+        )}
+      </div>
     </main>
   );
 }
