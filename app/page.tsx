@@ -1,11 +1,16 @@
 'use client';
 
-import { SearchInputField } from '@/components';
 import React, { useState } from 'react';
+
+import { SearchInputField } from '@/components';
+import { BooksByQuery } from '@/types';
 
 export default function Home() {
   /** Property */
   const [searchQuery, setSearchQuery] = useState('');
+  const [booksByQuery, setBooksByQuery] = useState<BooksByQuery | undefined>(
+    undefined
+  );
 
   /** Render */
   return (
@@ -13,6 +18,7 @@ export default function Home() {
       <SearchInputField
         query={searchQuery}
         handleSearchQuery={setSearchQuery}
+        handleFetchedBooks={setBooksByQuery}
       />
     </main>
   );

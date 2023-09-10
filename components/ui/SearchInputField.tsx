@@ -2,19 +2,29 @@
 
 import React, { useCallback } from 'react';
 
+import { BooksByQuery } from '@/types';
+import { fetchBooksByQuery } from '@/actions';
+
 interface SearchInputProps {
   query: string;
   handleSearchQuery: (query: string) => void;
+  handleFetchedBooks: (booksByQuery: BooksByQuery) => void;
 }
 
 export const SearchInputField = (props: SearchInputProps) => {
   /** Property */
-  const { query, handleSearchQuery, ...others } = props;
+  const { query, handleSearchQuery, handleFetchedBooks } = props;
 
   /** Function */
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      const data = await fetchBooksByQuery(query);
+
+      if (data) {
+        handleFetchedBooks(data);
+      }
     },
     [query]
   );
