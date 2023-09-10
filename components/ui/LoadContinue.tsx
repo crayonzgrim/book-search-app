@@ -46,7 +46,6 @@ export const LoadContinue = ({ query }: LoadContinueProps) => {
   }, [query, pagesLoaded, currentQuery]);
 
   useEffect(() => {
-    console.log(inView || currentQuery !== query);
     if (inView || currentQuery !== query) {
       handleLoadMore();
     }
