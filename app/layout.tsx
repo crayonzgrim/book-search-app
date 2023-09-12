@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google';
 
-import { Header } from '@/components';
+import { Footer, Header } from '@/components';
 import ProvidersForTheme from '@/theme';
 
 import './globals.css';
@@ -23,6 +23,7 @@ export default function RootLayout({
         <ProvidersForTheme>
           <Header />
           {children}
+          <Footer />
         </ProvidersForTheme>
       </body>
     </html>

@@ -3,11 +3,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { fetchBooksByQuery } from '@/actions/fetchBooksByQuery';
+import { fetchBooksByQuery } from '@/actions';
 import { BooksInfo } from '@/types';
-
-import { BookLists } from './BookLists';
-import { Spinner } from './Spinner';
+import { BookLists, Spinner } from '@/components';
 
 interface LoadContinueProps {
   query: string;

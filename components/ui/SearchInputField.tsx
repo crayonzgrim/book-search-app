@@ -4,6 +4,7 @@ import React, { useCallback, useState } from 'react';
 
 import { BooksByQuery } from '@/types';
 import { fetchBooksByQuery } from '@/actions';
+import { Spinner } from './Spinner';
 
 interface SearchInputProps {
   query: string;
@@ -16,11 +17,14 @@ export const SearchInputField = (props: SearchInputProps) => {
   const { query, handleSearchQuery, handleFetchedBooks } = props;
 
   const [currentQuery, setCurrentQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   /** Function */
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      setIsLoading(true);
 
       const data = await fetchBooksByQuery(query);
 
@@ -29,7 +33,10 @@ export const SearchInputField = (props: SearchInputProps) => {
         handleFetchedBooks(undefined);
       }
 
-      handleFetchedBooks(data);
+      if (data) {
+        setIsLoading(false);
+        handleFetchedBooks(data);
+      }
     },
     [query, currentQuery]
   );
@@ -56,7 +63,7 @@ export const SearchInputField = (props: SearchInputProps) => {
         disabled={!query}
         className="font-bold bg-amber-500 px-8 rounded-lg disabled:bg-gray-200 ml-5 disabled:text-gray-300"
       >
-        Search
+        {isLoading ? <Spinner /> : 'Search'}
       </button>
     </form>
   );

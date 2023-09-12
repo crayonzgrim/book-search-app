@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 
-import { BookLists, LoadContinue, SearchInputField } from '@/components';
+import { BookLists, SearchInputField } from '@/components';
 import { BooksByQuery } from '@/types';
+import { LoadContinue } from '@/utils';
 
 export default function Home() {
   /** Property */
@@ -14,7 +15,7 @@ export default function Home() {
 
   /** Render */
   return (
-    <main className="container mx-auto p-4 min-h-screen max-w-5xl">
+    <main className="mx-auto p-4 max-w-5xl">
       <SearchInputField
         query={searchQuery}
         handleSearchQuery={setSearchQuery}
@@ -23,7 +24,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {!booksByQuery || +booksByQuery?.total === 0 ? (
-          <div className="w-full min-h-[30em] flex justify-center items-center p-4 col-span-1 sm:col-span-2 md:col-span-3 border-2 rounded-xl">
+          <div className="w-full v-[50vh] min-h-screen flex justify-center items-center p-4 col-span-1 sm:col-span-2 md:col-span-3 border-2 rounded-xl">
             Try to search books!
           </div>
         ) : (
