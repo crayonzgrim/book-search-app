@@ -38,7 +38,7 @@ export const SearchInputField = (props: SearchInputProps) => {
         handleFetchedBooks(data);
       }
     },
-    [query, currentQuery]
+    [query, currentQuery, handleFetchedBooks]
   );
 
   /** Render */
