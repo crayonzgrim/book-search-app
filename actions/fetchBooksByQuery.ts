@@ -1,71 +1,74 @@
-'use server';
-
 import { BooksByQuery } from '@/types';
+import { baseURL } from '@/utils/common';
 
-export async function fetchBooksByQuery(query: string, page: number = 1) {
+// 일반 검색 시 함수
+export async function getBooksByQuery(
+  query: string,
+  page = 1
+): Promise<BooksByQuery> {
+  const data = await fetch(`${baseURL}/search/${query}/${page}`)
+    .then((response) => response.json())
+    .catch((err) => {
+      // TODO > Error 처리 필요
+      console.error('NORMAL ERROR >> ', err);
+    });
+
+  return data;
+}
+
+// '|'로 검색 시 함수
+export async function getBooksByContainQuery(
+  query: string,
+  page: number = 1
+): Promise<BooksByQuery> {
   let orPromise = [];
 
-  try {
-    let result: BooksByQuery = {
-      total: '',
-      page: '',
-      books: []
-    };
+  const orQuery = query.replace(/ /g, '').split('|');
 
-    if (query.includes('|')) {
-      const operatedQuery = query.split('|');
-      orPromise = operatedQuery.map((keyword) =>
-        fetch(
-          `https://api.itbook.store/1.0/search/${keyword.trim()}/${page}`
-        ).then((response) => response.json())
-      );
+  orPromise = orQuery.map((keyword) =>
+    fetch(`${baseURL}/search/${keyword}/${page}`)
+      .then((response) => response.json())
+      .catch((err) => {
+        // TODO > Error 처리 필요
+        console.error(err);
+      })
+  );
 
-      const orResults = await Promise.all(orPromise);
+  const orResults = await Promise.all(orPromise);
 
-      const combinedBooks = orResults.reduce(
-        (result, response) => {
-          return {
-            total: result.total + response.total,
-            page: result.page,
-            books: [...result.books, ...response.books]
-          };
-        },
-        { total: '0', page: '1', books: [] } as BooksByQuery
-      );
-
-      result = combinedBooks as BooksByQuery;
-      // return combinedBooks;
-    } else if (query.includes('-')) {
-      const searchQuery = query.split('-')[0].toLowerCase();
-      const excludeQuery = query.split('-')[1].toLowerCase();
-
-      const data = (await fetch(
-        `https://api.itbook.store/1.0/search/${searchQuery}/${page}`
-      ).then((response) => response.json())) as BooksByQuery;
-
-      const filteredData = data?.books.filter((item) => {
-        return !item.title.toLowerCase().includes(excludeQuery);
-      });
-
-      const combineData = {
-        ...data,
-        books: filteredData
+  return orResults.reduce(
+    (result, response) => {
+      return {
+        total: result.total + response.total,
+        page: result.page,
+        books: [...result.books, ...response.books]
       };
+    },
+    { error: '0', total: '0', page: '1', books: [] } as BooksByQuery
+  );
+}
 
-      result = combineData as BooksByQuery;
-      // return combineData as BooksByQuery;
-    } else {
-      const data = await fetch(
-        `https://api.itbook.store/1.0/search/${query}/${page}`
-      ).then((response) => response.json());
+// '-'로 검색 시 함수
+export async function getBooksByExceptQuery(
+  query: string,
+  page: number = 1
+): Promise<BooksByQuery> {
+  const searchQuery = query.split('-')[0].replace(/ /g, '').toLowerCase();
+  const excludeQuery = query.split('-')[1].replace(/ /g, '').toLowerCase();
 
-      result = data as BooksByQuery;
-      // return data as BooksByQuery;
-    }
+  const data = (await fetch(`${baseURL}/search/${searchQuery}/${page}`)
+    .then((response) => response.json())
+    .catch((err) => {
+      // TODO > Error 처리 필요
+      console.error(err);
+    })) as BooksByQuery;
 
-    return result;
-  } catch (err) {
-    // TODO > 에러처리 필요
-    console.error('API 요청 오류:', err);
-  }
+  const filteredData = data?.books.filter((item) => {
+    return !item.title.toLowerCase().includes(excludeQuery);
+  });
+
+  return {
+    ...data,
+    books: filteredData
+  };
 }
