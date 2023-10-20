@@ -2,9 +2,9 @@
 
 import React, { useCallback, useState } from 'react';
 
-import SearchButton from './SearchButton';
 import { useBooksInfoContext } from '@/context/store';
 import { getDataByQuery } from '@/utils/common';
+import SearchButton from './SearchButton';
 
 type SearchInputProps = {
   query: string;
