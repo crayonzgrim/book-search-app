@@ -1,13 +1,10 @@
-'use server';
-
 import { BookDetailByIsbn } from '@/types';
+import { baseURL } from '@/utils/common';
 
 // 도서 디테일 정보 함수
 export async function fetchDetailByIsbn(isbn13: string) {
   try {
-    const response = await fetch(
-      `https://api.itbook.store/1.0/books/${isbn13}`
-    );
+    const response = await fetch(`${baseURL}/books/${isbn13}`);
 
     if (!response.ok) {
       throw new Error('API 요청 오류');
