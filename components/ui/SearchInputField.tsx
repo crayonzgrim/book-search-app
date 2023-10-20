@@ -2,9 +2,9 @@
 
 import React, { useCallback, useState } from 'react';
 
+import SearchButton from './SearchButton';
 import { useBooksInfoContext } from '@/context/store';
 import { getDataByQuery } from '@/utils/common';
-import { Spinner } from './Spinner';
 
 type SearchInputProps = {
   query: string;
@@ -18,7 +18,7 @@ export enum LoadingStatus {
   ERROR = 'error'
 }
 
-export const SearchInputField = (props: SearchInputProps) => {
+export default function SearchInputField(props: SearchInputProps) {
   /** Property */
   const { query, handleSearchQuery } = props;
 
@@ -55,27 +55,24 @@ export const SearchInputField = (props: SearchInputProps) => {
   /** Render */
   return (
     <form
+      className="flex justify-between align-center mt-6 mb-12 max-w-5xl mx-auto"
       onSubmit={handleSubmit}
-      className="flex justify-between align-center max-w-6xl mx-auto mt-6 mb-6"
     >
       <input
         type="text"
         placeholder="Search book keywords..."
         value={query ?? ''}
-        onChange={(e) => handleSearchQuery(e.target.value)}
+        onChange={(e) => {
+          handleSearchQuery(e.target.value);
+          window.sessionStorage.setItem('query', e.target.value);
+        }}
         className={`w-full h-14 rounded-lg placeholder-gray-500 border-2 ${
           query.length > 0
             ? 'border-amber-600 outline-amber-600'
             : 'border-gray-400'
         } outline-amber-600 bg-transparent px-4 py-4`}
       />
-      <button
-        type="submit"
-        disabled={!query}
-        className="font-bold bg-amber-500 px-8 rounded-lg disabled:bg-gray-200 ml-5 disabled:text-gray-300"
-      >
-        {isLoading ? <Spinner /> : 'Search'}
-      </button>
+      <SearchButton isLoading={isLoading} query={query} />
     </form>
   );
-};
+}

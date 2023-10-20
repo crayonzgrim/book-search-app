@@ -1,38 +1,41 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { BookLists, SearchInputField } from '@/components';
-import { BooksByQuery } from '@/types';
-import { LoadContinue } from '@/utils';
+import SearchInputField from '@/components/ui/SearchInputField';
+import BooksListLayout from '@/components/layout/BookListsLayout';
 
-export default function Home() {
+export default function HomePage() {
   /** Property */
-  const [searchQuery, setSearchQuery] = useState('');
-  const [booksByQuery, setBooksByQuery] = useState<BooksByQuery | undefined>(
-    undefined
-  );
+  const [searchQuery, setSearchQuery] = useState(() => {
+    if (typeof window !== undefined) {
+      return sessionStorage.getItem('query') ?? '';
+    }
+
+    return '';
+  });
+
+  /** Function */
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.clear();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   /** Render */
   return (
-    <main className="mx-auto p-4 max-w-5xl">
+    <main className="grow mx-auto">
       <SearchInputField
         query={searchQuery}
         handleSearchQuery={setSearchQuery}
       />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {!booksByQuery || +booksByQuery?.total === 0 ? (
-          <div className="w-full v-[50vh] min-h-screen flex justify-center items-center p-4 col-span-1 sm:col-span-2 md:col-span-3 border-2 rounded-xl">
-            Try to search books!
-          </div>
-        ) : (
-          <>
-            <BookLists bookInfo={booksByQuery.books} />
-            <LoadContinue query={searchQuery} />
-          </>
-        )}
-      </div>
+      <BooksListLayout query={searchQuery} />
     </main>
   );
 }

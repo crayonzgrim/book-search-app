@@ -2,6 +2,7 @@
 
 import { BookDetailByIsbn } from '@/types';
 
+// 도서 디테일 정보 함수
 export async function fetchDetailByIsbn(isbn13: string) {
   try {
     const response = await fetch(

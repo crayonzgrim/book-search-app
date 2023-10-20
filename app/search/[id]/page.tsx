@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import { BookDetailByIsbn } from '@/types';
 import { fetchDetailByIsbn } from '@/actions';
-import { Spinner } from '@/components';
+import Spinner from '@/utils/Spinner';
 
 export default function SearchPage({ params }: any) {
   const searchId = params.id;

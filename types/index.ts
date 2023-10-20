@@ -1,4 +1,4 @@
-export interface BooksInfo {
+export interface Book {
   title: string;
   subtitle: string;
   isbn13: string;
@@ -8,13 +8,13 @@ export interface BooksInfo {
 }
 
 export interface BooksByQuery {
+  books: Book[];
   error: string;
   total: string;
   page: string;
-  books: BooksInfo[];
 }
 
-export interface BookDetailByIsbn extends Omit<BooksInfo, 'isbn13' | 'url'> {
+export interface BookDetailByIsbn extends Omit<Book, 'isbn13' | 'url'> {
   error: string;
   authors: string;
   desc: string;

@@ -6,13 +6,13 @@ import { useInView } from 'react-intersection-observer';
 import { BooksByQuery } from '@/types';
 import { useBooksInfoContext } from '@/context/store';
 import { getDataByQuery } from '@/utils/common';
-import { BookLists, Spinner } from '@/components';
+import Spinner from './Spinner';
 
 interface LoadContinueProps {
   query: string;
 }
 
-export const LoadContinue = ({ query }: LoadContinueProps) => {
+export default function LoadContinue({ query }: LoadContinueProps) {
   /** Property */
   const { booksInfo, setBooksInfo } = useBooksInfoContext();
 
@@ -62,19 +62,8 @@ export const LoadContinue = ({ query }: LoadContinueProps) => {
 
   /** Render */
   return (
-    <>
-      {isKeepFetch ? (
-        <>
-          <BookLists bookInfo={booksInfo.books} />
-        </>
-      ) : null}
-
-      <div
-        ref={ref}
-        className="flex justify-center items-center p-4 col-span-1 sm:col-span-2 md:col-span-3"
-      >
-        {isKeepFetch ? <Spinner /> : null}
-      </div>
-    </>
+    <div ref={ref} className="flex items-center justify-center w-full">
+      {isKeepFetch ? <Spinner /> : null}
+    </div>
   );
-};
+}

@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 import { MdLightMode } from 'react-icons/md';
 import { BsFillMoonFill } from 'react-icons/bs';
 
-export const ThemeSwitch = () => {
+export default function ThemeSwitch() {
   /** Property */
   const { systemTheme, theme, setTheme } = useTheme();
 
@@ -34,4 +34,4 @@ export const ThemeSwitch = () => {
       )}
     </div>
   );
-};
+}

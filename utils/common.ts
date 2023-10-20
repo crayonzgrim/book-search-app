@@ -7,6 +7,13 @@ import { BooksByQuery } from '@/types';
 
 export const baseURL = `https://api.itbook.store/1.0`;
 
+// Unique Id
+export const createId = () => {
+  const uuid = crypto.randomUUID();
+
+  return uuid;
+};
+
 // 검색 방식에 맞는 함수 호출
 export const getDataByQuery = async (query: string, page = 1) => {
   let data: BooksByQuery;
