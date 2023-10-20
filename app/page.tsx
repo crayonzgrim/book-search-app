@@ -8,7 +8,7 @@ import BooksListLayout from '@/components/layout/BookListsLayout';
 export default function HomePage() {
   /** Property */
   const [searchQuery, setSearchQuery] = useState(() => {
-    if (typeof window !== undefined) {
+    if (typeof sessionStorage !== 'undefined') {
       return sessionStorage.getItem('query') ?? '';
     }
 

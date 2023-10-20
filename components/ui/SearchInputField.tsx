@@ -49,7 +49,7 @@ export default function SearchInputField(props: SearchInputProps) {
         setIsLoading(LoadingStatus.NORMAL);
       }, 1500);
     },
-    [query]
+    [query, setBooksInfo]
   );
 
   /** Render */
