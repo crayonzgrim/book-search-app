@@ -2,43 +2,54 @@
 
 import React, { useCallback, useState } from 'react';
 
-import { BooksByQuery } from '@/types';
-import { fetchBooksByQuery } from '@/actions';
+import { useBooksInfoContext } from '@/context/store';
+import { getDataByQuery } from '@/utils/common';
 import { Spinner } from './Spinner';
 
-interface SearchInputProps {
+type SearchInputProps = {
   query: string;
   handleSearchQuery: (query: string) => void;
-  handleFetchedBooks: (booksByQuery: BooksByQuery | undefined) => void;
+};
+
+export enum LoadingStatus {
+  NORMAL = 'normal',
+  LOADING = 'loading',
+  SUCCESS = 'success',
+  ERROR = 'error'
 }
 
 export const SearchInputField = (props: SearchInputProps) => {
   /** Property */
-  const { query, handleSearchQuery, handleFetchedBooks } = props;
+  const { query, handleSearchQuery } = props;
 
-  const [currentQuery, setCurrentQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { setBooksInfo } = useBooksInfoContext();
+
+  const [isLoading, setIsLoading] = useState(LoadingStatus.NORMAL);
 
   /** Function */
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      setIsLoading(true);
+      setIsLoading(LoadingStatus.LOADING);
 
-      const data = await fetchBooksByQuery(query);
+      await getDataByQuery(query)
+        .then((data) => {
+          if (data) {
+            setIsLoading(LoadingStatus.SUCCESS);
+            setBooksInfo(data);
+          }
+        })
+        .catch((err) => {
+          // TODO > Error 처리 필요
+          setIsLoading(LoadingStatus.ERROR);
+        });
 
-      if (currentQuery !== query) {
-        setCurrentQuery(query);
-        handleFetchedBooks(undefined);
-      }
-
-      if (data) {
-        setIsLoading(false);
-        handleFetchedBooks(data);
-      }
+      setTimeout(() => {
+        setIsLoading(LoadingStatus.NORMAL);
+      }, 1500);
     },
-    [query, currentQuery, handleFetchedBooks]
+    [query]
   );
 
   /** Render */

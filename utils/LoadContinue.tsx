@@ -3,8 +3,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { fetchBooksByQuery } from '@/actions';
-import { BooksInfo } from '@/types';
+import { BooksByQuery } from '@/types';
+import { useBooksInfoContext } from '@/context/store';
+import { getDataByQuery } from '@/utils/common';
 import { BookLists, Spinner } from '@/components';
 
 interface LoadContinueProps {
@@ -13,48 +14,58 @@ interface LoadContinueProps {
 
 export const LoadContinue = ({ query }: LoadContinueProps) => {
   /** Property */
+  const { booksInfo, setBooksInfo } = useBooksInfoContext();
+
   const { ref, inView } = useInView();
 
-  const [books, setBooks] = useState<BooksInfo[]>([]);
   const [pagesLoaded, setPagesLoaded] = useState(1);
-  const [currentQuery, setCurrentQuery] = useState('');
 
-  const [isKeepFetch, setIsKeepFetch] = useState<boolean | undefined>(
-    undefined
-  );
+  const [isKeepFetch, setIsKeepFetch] = useState(false);
 
   /** Function */
   const handleLoadMore = useCallback(async () => {
     const nextPage = pagesLoaded + 1;
-    const newProducts = await fetchBooksByQuery(query, nextPage);
 
-    if (currentQuery !== query) {
-      setCurrentQuery(query);
-      setBooks([]);
-    } else {
-      if (newProducts?.books && newProducts?.books?.length > 0) {
+    await getDataByQuery(query, nextPage)
+      .then((books) => {
         setIsKeepFetch(true);
 
-        setBooks((prev: BooksInfo[]) => [...prev, ...newProducts?.books]);
+        setTimeout(() => {
+          if (booksInfo) {
+            const combineBooks = [...booksInfo.books, ...books.books];
+
+            setBooksInfo((prev: BooksByQuery) => ({
+              ...prev,
+              books: combineBooks
+            }));
+          }
+        }, 1200);
+
         setPagesLoaded(nextPage);
-      } else {
-        setIsKeepFetch(false);
-      }
-    }
-  }, [query, pagesLoaded, currentQuery]);
+      })
+      .catch((err) => {
+        // TODO > error handling 필요
+        console.error(err);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsKeepFetch(false);
+        }, 1200);
+      });
+  }, [query, booksInfo, pagesLoaded]);
 
   useEffect(() => {
-    if (inView || currentQuery !== query) {
+    if (inView) {
       handleLoadMore();
     }
-  }, [inView, currentQuery, query]);
+  }, [inView]);
 
   /** Render */
   return (
     <>
       {isKeepFetch ? (
         <>
-          <BookLists bookInfo={books} />
+          <BookLists bookInfo={booksInfo.books} />
         </>
       ) : null}
 

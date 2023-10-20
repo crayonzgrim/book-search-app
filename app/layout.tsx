@@ -4,6 +4,7 @@ import { Footer, Header } from '@/components';
 import ProvidersForTheme from '@/theme';
 
 import './globals.css';
+import { BooksInfoContextProvider } from '@/context/store';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ProvidersForTheme>
           <Header />
-          {children}
+          <BooksInfoContextProvider>{children}</BooksInfoContextProvider>
           <Footer />
         </ProvidersForTheme>
       </body>

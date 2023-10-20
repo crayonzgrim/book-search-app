@@ -8,6 +8,7 @@ export interface BooksInfo {
 }
 
 export interface BooksByQuery {
+  error: string;
   total: string;
   page: string;
   books: BooksInfo[];
