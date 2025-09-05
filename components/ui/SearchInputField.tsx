@@ -2,8 +2,8 @@
 
 import React, { useCallback, useState } from 'react';
 
-import { BooksByQuery } from '@/types';
 import { fetchBooksByQuery } from '@/actions';
+import { BooksByQuery } from '@/types';
 import { Spinner } from './Spinner';
 
 interface SearchInputProps {
@@ -24,18 +24,24 @@ export const SearchInputField = (props: SearchInputProps) => {
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
+      if (!query.trim()) return;
+
       setIsLoading(true);
 
-      const data = await fetchBooksByQuery(query);
+      try {
+        const data = await fetchBooksByQuery(query);
 
-      if (currentQuery !== query) {
-        setCurrentQuery(query);
-        handleFetchedBooks(undefined);
-      }
+        if (currentQuery !== query) {
+          setCurrentQuery(query);
+          handleFetchedBooks(undefined);
+        }
 
-      if (data) {
-        setIsLoading(false);
         handleFetchedBooks(data);
+      } catch (error) {
+        console.error('검색 실패:', error);
+        handleFetchedBooks(undefined);
+      } finally {
+        setIsLoading(false);
       }
     },
     [query, currentQuery, handleFetchedBooks]

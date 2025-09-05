@@ -39,10 +39,10 @@
      - [리스트], [상세] 페이지
    - API
      - [리스트] 페이지에서는 검색된 서적 정보 구현
-       - 키워드 검색을 통한 정보 API : https://api.itbook.store/1.0/search/{keyword}
-       - 무한 스크롤로 페이지 업데이트 API : https://api.itbook.store/1.0/search/{keyword}/{pageNumber}
+       - 키워드 검색을 통한 정보 API : <https://api.itbook.store/1.0/search/{keyword}>
+       - 무한 스크롤로 페이지 업데이트 API : <https://api.itbook.store/1.0/search/{keyword}/{pageNumber}>
      - [상세] 페이지는 클릭한 서적의 상세 정보 구현
-       - 상세 페이지 정보 API : https://api.itbook.store/1.0/books/{isbn13}
+       - 상세 페이지 정보 API : <https://api.itbook.store/1.0/books/{isbn13}>
 
 2. 검색 사용 방법
 
@@ -75,3 +75,23 @@
   - 항상 메인 페이지에서는 스크롤이 제일 위로 올라오도록 하기
   - 검색한 내용을 local storage나 DB에 쌓아두고 뒤로 가기해도 그대로 가지고 있도록 하기
   - 계속 무한 스크롤을 하면 위로 올리기 힘드므로, 스크롤 제일 위로 올리기 버튼 추가
+
+## 최신 업데이트(2025. 09. 05)
+
+✨ 성능 최적화
+
+- SSG로 메인 페이지 즉시 로딩
+- SSR로 검색 결과 SEO 최적화
+- ISR로 상세 페이지 캐싱 + 최신 데이터
+
+🔍 SEO 최적화
+
+- 동적 메타데이터 생성
+- OpenGraph, Twitter Cards
+- 검색엔진 크롤러 친화적
+
+⚡ 사용자 경험
+
+- Suspense로 로딩 상태 개선
+- Streaming으로 점진적 렌더링
+- Server/Client 컴포넌트 최적 분리
